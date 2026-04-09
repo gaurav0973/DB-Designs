@@ -1,0 +1,91 @@
+vehicle [icon: truck, color: green]{
+  vehicle_id string pk
+  vehicle_number string
+  vehicle_category_id string
+}
+
+vehicle_category [icon: tag, color: green]{
+  vehicle_category_id string pk
+  name  enum(bike, car, SUV, EV)
+}
+
+access_category [icon: shield, color: green]{
+  access_category_id string pk
+  name enum(VIP, staff, exhibitor, cosplay)
+}
+
+parking_zone [icon: map, color: green]{
+  zone_id string pk
+  zone_name string
+}
+
+parking_level [icon: layers, color: green]{
+  level_id string pk
+  zone_id string
+  level_number int
+}
+
+parking_spot_category [icon: grid, color: green]{
+  spot_category_id string pk
+  name enum(bike, car, EV charging)
+}
+
+parking_spot [icon: square, color: green]{
+  spot_id string pk
+  level_id string
+  spot_category_id string
+  access_category_id string
+  is_active boolean
+}
+
+parking_session [icon: clock, color: green]{
+  session_id string pk
+  vehicle_id string
+  spot_id string
+  access_category_id string
+  entry_time timestamp
+  exit_time timestamp
+  status enum(active, completed)
+}
+
+parking_ticket [icon: file-text, color: green]{
+  ticket_id string pk
+  session_id string
+  ticket_number string
+  issued_at timestamp
+}
+
+payment [icon: credit-card, color: green]{
+  payment_id string pk
+  session_id string
+  amount number
+  payment_status string
+  payment_time timestamp
+  payment_method string
+}
+
+
+vehicle.vehicle_category_id > vehicle_category.vehicle_category_id: [color: green]
+
+
+parking_level.zone_id > parking_zone.zone_id: [color: green]
+
+
+parking_spot.level_id > parking_level.level_id: [color: green]
+
+
+parking_spot.spot_category_id > parking_spot_category.spot_category_id: [color: green]
+
+
+parking_spot.access_category_id > access_category.access_category_id: [color: green]
+
+
+parking_session.vehicle_id > vehicle.vehicle_id: [color: green]
+parking_session.spot_id > parking_spot.spot_id: [color: green]
+parking_session.access_category_id > access_category.access_category_id: [color: green]
+
+
+parking_ticket.session_id > parking_session.session_id: [color: green]
+
+
+payment.session_id > parking_session.session_id: [color: green]
